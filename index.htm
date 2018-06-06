@@ -23,30 +23,6 @@
     <script type="text/javascript" src="index_files/FileSaver.js"></script>
     <script type="text/javascript" src="index_files/pgpkeygen.js"></script>
 
-    <script>
-		//enter keys by select file, containing PGP keys as text.
-      var openFile = function(event, id) {
-        var input = event.target;
-
-        var reader = new FileReader();
-        reader.onload = function(){
-          var text = reader.result;
-          var node = document.getElementById(id);
-          node.innerText = text;
-          //console.log(reader.result.substring(0, 200));
-        };
-        reader.readAsText(input.files[0]);
-      };
-    </script>
-	
-<script type='text/javascript'>
-//function to download textarea
-function doDL(s){
-    function dataUrl(data) {return "data:x-application/text," + escape(data);}
-	window.open(dataUrl(s));
-}
-</script>
-	
     <!--[if IE 9]>
 		<script type="text/javascript" src="/assets/js/placeholder.js"></script>
 	<![endif]-->
@@ -91,6 +67,9 @@ function doDL(s){
                         <li role="presentation"><a href="#decrypt" aria-controls="decrypt" role="tab" data-toggle="tab">Decrypt(+verify)</a></li>
                         <li role="presentation"><a href="#faq" aria-controls="faq" role="tab" data-toggle="tab">FAQ</a></li>
                         <li role="presentation"><a href="#about" aria-controls="about" role="tab" data-toggle="tab">About</a></li>
+		<!--
+			<li role="presentation"><a href="#guide" aria-controls="about" role="tab" data-toggle="tab">Giude</a></li>
+		-->
                     </ul>
 
                     <!-- Tab panes -->
@@ -268,8 +247,11 @@ function doDL(s){
                                         </div>
                                         <div class="panel-body">
                                             <textarea class="form-control message" rows="7" id="signed-text" placeholder="Here you'll see the signed message." readonly="readonly"></textarea>
-											<input value='download' type='button' onclick='doDL(document.getElementById("signed-text").value)' />
-										</div>
+                                            <br>
+                                            <a id="download-signed-text" style="display:none;" href="javascript:void(0);" title="Download signed text."
+                                            onclick="linkText('signed-text', 'download-signed-text', 'signed_text.txt');
+                                            return false;"><button>Download signed message</button></a>
+					</div>
                                     </div>
                                 </div>
                              </div>
@@ -312,9 +294,12 @@ function doDL(s){
                                         </div>
 										<div id="vrAlert"></div>
                                         <div class="panel-body">
-											<textarea class="form-control message" rows="7" id="pure-text" placeholder="Here you&#39;ll see pure message, if signature will be verified." readonly=""></textarea>
-											<input value='download' type='button' onclick='doDL(document.getElementById("pure-text").value)' />
-										</div>
+                                            <textarea class="form-control message" rows="7" id="pure-text" placeholder="Here you&#39;ll see pure message, if signature will be verified." readonly=""></textarea>
+                                            <br>
+                                            <a id="download-pure-text" style="display:none;" href="javascript:void(0);" title="Download pure text"
+                                            onclick="linkText('pure-text', 'download-pure-text', 'pure_text.txt');
+                                            return false;"><button>Download pure message</button></a>
+                                        </div>
                                     </div>
                                 </div>
                              </div>
@@ -362,7 +347,7 @@ function doDL(s){
                                         <div class="panel-body">
                                             <textarea class="form-control message" rows="7" id="signencrypt-plain-text" placeholder="Write your message here."></textarea>
                                         <input type='file' onchange='openFile(event, "signencrypt-plain-text")'><br>
-										</div>
+                                            </div>
                                     </div>
 
                                      <button class="btn btn-primary" id="signencrypt-button" title="If private key not specified - just encryption by public key.">(Sign and) Encrypt the message</button>
@@ -373,12 +358,15 @@ function doDL(s){
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Signed and encrypted message</h3>
                                         </div>
-										<div id="vrAlert3"></div>
+                                            <div id="vrAlert3"></div>
                                         <div class="panel-body">
                                             <textarea class="form-control message" style="display: none;" rows="7" id="encrypted-text" placeholder="this is hidden textarea to copy from here an encrypted text" readonly="readonly"></textarea>
-											<textarea class="form-control message" rows="7" id="signencrypt-text" placeholder="Here you'll see the signed and encrypted message." readonly="readonly"></textarea>
-											<input value='download' type='button' onclick='doDL(document.getElementById("signencrypt-text").value)' />
-										</div>
+                                            <textarea class="form-control message" rows="7" id="signencrypt-text" placeholder="Here you'll see the signed and encrypted message." readonly="readonly"></textarea>
+                                            <br>
+                                            <a id="download-signencrypt-text" style="display:none;"  href="javascript:void(0);" title="Download pure text"
+                                            onclick="linkText('signencrypt-text', 'download-signencrypt-text', 'signed_and_encrypted_text.txt');
+                                            return false;"><button>Download encrypted message</button></a></div>
+                                         </div>
                                     </div>
                                 </div>
                              </div>
@@ -443,10 +431,13 @@ this will not be verified successfully.">Decrypt the message (and verify signatu
                                             <h3 class="panel-title">Decrypted message</h3>
                                         </div>
                                         <div class="panel-body">
-											<div id="vrAlert2"></div>
+                                            <div id="vrAlert2"></div>
                                             <textarea class="form-control message" rows="7" id="decryption-decrypted-text" placeholder="Here you'll see the decrypted message." readonly="readonly"></textarea>
-											<input value='download' type='button' onclick='doDL(document.getElementById("decryption-decrypted-text").value)' />
-											</div>
+                                            <br>
+                                            <a id="download-decrypted-text" style="display:none;" href="javascript:void(0);" title="Download pure text"
+                                            onclick="linkText('decryption-decrypted-text', 'download-decrypted-text', 'decrypted_text.txt');
+                                            return false;"><button>Download decrypted text.</button></a>
+                                        </div>
                                     </div>
                                 </div>
                              </div>
