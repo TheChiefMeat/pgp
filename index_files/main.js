@@ -1,3 +1,39 @@
+	//Load the keys to textareas from the text files, containing PGP keys as text.
+var openFile = function(event, id) {
+	var input = event.target;
+		var reader = new FileReader();
+		reader.onload = function(){
+			var text = reader.result;
+			var node = document.getElementById(id);
+			node.value = text;
+			//console.log(reader.result.substring(0, 200));
+		};
+		reader.readAsText(input.files[0]);
+};
+	  
+//funtion to show and hide download link (button) for empty or filled readonly textarea's
+function linkText(input, link, fileName) { //IDs and filename
+  link.style.display = 'none' ? 'block': 'block';
+  updateLink(input, link)
+  link.download = fileName;
+  
+  function onInput() {
+    updateLink(input, link);
+  }
+  
+  input.addEventListener("input", onInput);
+  return onInput;
+}
+
+//function to generate download links for buttons.
+function updateLink(input, link) { //
+  link.hidden = !input.value;
+  link.href = "data:text/plain;charset=UTF-8," + encodeURI(input.value); //<-- data in href
+  link.onclick = '';
+  link.style.display = (input.value==='') ? 'none' : 'block';
+}
+
+
 $(document).ready(function() {
     /* Dynamic key size menus */
     $('#algorithm').change(function() {
@@ -49,6 +85,7 @@ $(document).ready(function() {
                   kbpgp.box(params, function(err, result_string, result_buffer) {
                     console.log(err, result_string, result_buffer);
                     SignedText.val(result_string);
+					linkText(document.getElementById('signed-text'), document.getElementById('download-signed-text'), 'signed_message.txt');
                   });
                 }
               });
@@ -97,6 +134,7 @@ $(document).ready(function() {
                       console.log("decrypted message: " + text);
 
                       PureText.val(text);
+					  linkText(document.getElementById('pure-text'), document.getElementById('download-pure-text'), 'pure_text.txt');
 					  
                       var ds = km = null;
                       ds = literals[0].get_data_signer();
@@ -174,7 +212,7 @@ $(document).ready(function() {
                   kbpgp.box(params, function(err, result_string, result_buffer) {
                       console.log(err, result_string, result_buffer);
                       signencryptText.val(result_string);
-					  
+					  linkText(document.getElementById('signencrypt-text'), document.getElementById('download-signencrypt-text'), 'signed_and_encrypted_text.txt');
 						if(currUser===null){
 							clone = $('#vrWarning').clone();
 							clone.find('#vrAddrLabel').html("Message successfully encrypted, but not signed. Private key not loaded.");
@@ -247,7 +285,13 @@ $(document).ready(function() {
 										console.log("decrypted message: " + decryptedText);
 
 										decryptionDecryptedText.val(decryptedText);
-
+										
+										linkText(
+											document.getElementById('decryption-decrypted-text'),
+											document.getElementById('download-decrypted-text'),
+											'decrypted_text.txt'
+										);
+										
 										var ds = km = null;
 										ds = literals[0].get_data_signer();
 										if (ds) { km = ds.get_key_manager(); }
@@ -288,7 +332,13 @@ $(document).ready(function() {
 										console.log("decrypted message: " + decryptedText);
 
 										decryptionDecryptedText.val(decryptedText);
-
+										
+										linkText(
+											document.getElementById('decryption-decrypted-text'),
+											document.getElementById('download-decrypted-text'),
+											'decrypted_text.txt'
+										);
+										
 										var ds = km = null;
 										ds = literals[0].get_data_signer();
 										if (ds) { km = ds.get_key_manager(); }

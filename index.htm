@@ -4,10 +4,10 @@
 
     <!-- Set charset to UTF-8 -->
     <meta charset="utf-8">
-	
-	<div class="title">
+    
+    <div class="title">
     <title>PGP Key Generator</title>
-	</div>
+    </div>
 
     <meta name="description" content="A simple and easy to use client-side PGP system.">
     <meta name="author" content="Matej Ramuta">
@@ -22,34 +22,10 @@
     <script type="text/javascript" src="index_files/kbpgp.js"></script>
     <script type="text/javascript" src="index_files/FileSaver.js"></script>
     <script type="text/javascript" src="index_files/pgpkeygen.js"></script>
-
-    <script>
-		//enter keys by select file, containing PGP keys as text.
-      var openFile = function(event, id) {
-        var input = event.target;
-
-        var reader = new FileReader();
-        reader.onload = function(){
-          var text = reader.result;
-          var node = document.getElementById(id);
-          node.innerText = text;
-          //console.log(reader.result.substring(0, 200));
-        };
-        reader.readAsText(input.files[0]);
-      };
-    </script>
-	
-<script type='text/javascript'>
-//function to download textarea
-function doDL(s){
-    function dataUrl(data) {return "data:x-application/text," + escape(data);}
-	window.open(dataUrl(s));
-}
-</script>
-	
+    
     <!--[if IE 9]>
-		<script type="text/javascript" src="/assets/js/placeholder.js"></script>
-	<![endif]-->
+        <script type="text/javascript" src="index_files/placeholder.js"></script>
+    <![endif]-->
 
     <!-- Main script -->
     <script type="text/javascript" src="index_files/main.js"></script>
@@ -58,7 +34,7 @@ function doDL(s){
 </style></head>
 
 <body>
-	<!--status notification-->
+    <!--status notification-->
     <div class="hidden">
         <div class="alert alert-success fade in" id="vrSuccess">
             <button aria-hidden="true" class="close" data-dismiss="alert" type="button">&times;</button><span id="vrAddrLabel"></span>
@@ -71,7 +47,7 @@ function doDL(s){
         </div>
     </div>
     
-	<div class="container">
+    <div class="container">
         <div class="row content">
             <div class="col-md-12">
 
@@ -91,6 +67,9 @@ function doDL(s){
                         <li role="presentation"><a href="#decrypt" aria-controls="decrypt" role="tab" data-toggle="tab">Decrypt(+verify)</a></li>
                         <li role="presentation"><a href="#faq" aria-controls="faq" role="tab" data-toggle="tab">FAQ</a></li>
                         <li role="presentation"><a href="#about" aria-controls="about" role="tab" data-toggle="tab">About</a></li>
+                    <!--
+                        <li role="presentation"><a href="#guide" aria-controls="about" role="tab" data-toggle="tab">Giude</a></li>
+                    -->
                     </ul>
 
                     <!-- Tab panes -->
@@ -236,7 +215,7 @@ function doDL(s){
                                         <div class="panel-body">
                                             <textarea class="form-control message" id="sign-private-key" rows="7" placeholder="Paste your private key here. ECC or RSA keys working both." title="ECC and RSA algorithms working both for sign and verify. You can use ECC keys here."></textarea>
                                             <input type='file' onchange='openFile(event, "sign-private-key")'>
-											<br>
+                                            <br>
 
                                             <div class="input-group">
                                                 <div class="input-group-addon"><span class="glyphicon glyphicon-text-background" aria-hidden="true"></span></div>
@@ -254,30 +233,32 @@ function doDL(s){
                                         </div>
                                         <div class="panel-body">
                                             <textarea class="form-control message" rows="7" id="sign-plain-text" placeholder="Write your message here."></textarea>
-											<input type='file' onchange='openFile(event, "sign-plain-text")'><br>
-										</div>
+                                            <input type='file' onchange='openFile(event, "sign-plain-text")'><br>
+                                        </div>
                                     </div>
 
                                      <button class="btn btn-primary" id="sign-button">Sign the message</button>
                                      <br>
                                      <br>
-
                                      <div class="panel panel-default">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Signed message</h3>
                                         </div>
                                         <div class="panel-body">
-                                            <textarea class="form-control message" rows="7" id="signed-text" placeholder="Here you'll see the signed message." readonly="readonly"></textarea>
-											<input value='download' type='button' onclick='doDL(document.getElementById("signed-text").value)' />
-										</div>
+                                        <textarea class="form-control message" rows="7" id="signed-text" placeholder="Here you'll see the signed message." readonly="readonly"></textarea>
+                                        <br>
+                                        <a id="download-signed-text" style="display:none;" href="javascript:void(0);" title="Download signed text."
+                                        onclick="linkText('signed-text', 'download-signed-text', 'signed_text.txt');
+                                        return false;"><button>Download signed message</button></a>
+                                        </div>
                                     </div>
                                 </div>
                              </div>
                         </div>
                         <!-- end Sign message -->
 
-						<!-- Verify message -->
-						<div role="tabpanel" class="tab-pane" id="verify">
+                        <!-- Verify message -->
+                        <div role="tabpanel" class="tab-pane" id="verify">
                              <div class="row generator">
                                 <div class="col-md-5">
                                     <div class="panel panel-default">
@@ -287,7 +268,7 @@ function doDL(s){
                                         <div class="panel-body" title="Sign by private key, verify by public key. ECC keys working too.">
                                             <textarea class="form-control message" id="Signer-public-key" rows="7" placeholder="Paste receiver&#39;s public key here."></textarea>
                                         <input type='file' onchange='openFile(event, "Signer-public-key")'><br>
-										</div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -299,7 +280,7 @@ function doDL(s){
                                         <div class="panel-body">
                                             <textarea class="form-control message" rows="7" id="Unverified-plain-text" placeholder="Write your message here."></textarea>
                                         <input type='file' onchange='openFile(event, "Unverified-plain-text")'><br>
-										</div>
+                                        </div>
                                     </div>
 
                                      <button class="btn btn-primary" id="verify-signature" title="Message -> to hash, then verify fingerprint from signed hash.">Verify signature</button>
@@ -310,21 +291,24 @@ function doDL(s){
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Pure message and status</h3>
                                         </div>
-										<div id="vrAlert"></div>
+                                        <div id="vrAlert"></div>
                                         <div class="panel-body">
-											<textarea class="form-control message" rows="7" id="pure-text" placeholder="Here you&#39;ll see pure message, if signature will be verified." readonly=""></textarea>
-											<input value='download' type='button' onclick='doDL(document.getElementById("pure-text").value)' />
-										</div>
+                                            <textarea class="form-control message" rows="7" id="pure-text" placeholder="Here you&#39;ll see pure message, if signature will be verified." readonly=""></textarea>
+                                            <br>
+                                            <a id="download-pure-text" style="display:none;" href="javascript:void(0);" title="Download pure text"
+                                            onclick="linkText('pure-text', 'download-pure-text', 'pure_text.txt');
+                                            return false;"><button>Download pure message</button></a>
+                                        </div>
                                     </div>
                                 </div>
                              </div>
                         </div>
                         <!-- end Verify message -->
-						
+                        
                         <!-- Sign+Encrypt message -->
                         <div role="tabpanel" class="tab-pane" id="signencrypt">
                              <div class="row generator">
-							 <h4><center>Only pub for simply encryption, priv+pub for sign+encrypt.</center></h4><br>
+                             <h4><center>Only pub for simply encryption, priv+pub for sign+encrypt.</center></h4><br>
                                 <div class="col-md-5">
                                     <div class="panel panel-default">
                                       <div class="panel-heading">
@@ -333,17 +317,17 @@ function doDL(s){
                                       <div class="panel-body">
                                           <textarea class="form-control message" id="signencrypt-receivers-public-key" rows="7" placeholder="Paste the public key here. RSA only." title="Need for encryption. Only RSA. ECC encryption not working now..."></textarea>
                                           <input type='file' onchange='openFile(event, "signencrypt-receivers-public-key")'><br>
-										  <br>
+                                          <br>
                                       </div>
-									  </div>
-									  <div class="panel panel-default">
+                                      </div>
+                                      <div class="panel panel-default">
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Signer's Private Key (signing)</h3>
                                         </div>
                                         <div class="panel-body">
                                             <textarea class="form-control message" id="signencrypt-private-key" rows="7" placeholder="Paste the private key here. This can be ECC key." title="If private key not specified will be encryption without signature."></textarea>
                                             <input type='file' onchange='openFile(event, "signencrypt-private-key")'><br>
-											<br>
+                                            <br>
 
                                             <div class="input-group">
                                                 <div class="input-group-addon"><span class="glyphicon glyphicon-text-background" aria-hidden="true"></span></div>
@@ -362,7 +346,7 @@ function doDL(s){
                                         <div class="panel-body">
                                             <textarea class="form-control message" rows="7" id="signencrypt-plain-text" placeholder="Write your message here."></textarea>
                                         <input type='file' onchange='openFile(event, "signencrypt-plain-text")'><br>
-										</div>
+                                        </div>
                                     </div>
 
                                      <button class="btn btn-primary" id="signencrypt-button" title="If private key not specified - just encryption by public key.">(Sign and) Encrypt the message</button>
@@ -373,12 +357,15 @@ function doDL(s){
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Signed and encrypted message</h3>
                                         </div>
-										<div id="vrAlert3"></div>
+                                        <div id="vrAlert3"></div>
                                         <div class="panel-body">
                                             <textarea class="form-control message" style="display: none;" rows="7" id="encrypted-text" placeholder="this is hidden textarea to copy from here an encrypted text" readonly="readonly"></textarea>
-											<textarea class="form-control message" rows="7" id="signencrypt-text" placeholder="Here you'll see the signed and encrypted message." readonly="readonly"></textarea>
-											<input value='download' type='button' onclick='doDL(document.getElementById("signencrypt-text").value)' />
-										</div>
+                                            <textarea class="form-control message" rows="7" id="signencrypt-text" placeholder="Here you'll see the signed and encrypted message." readonly="readonly"></textarea>
+                                            <br>
+                                            <a id="download-signencrypt-text" style="display:none;"  href="javascript:void(0);" title="Download pure text"
+                                            onclick="linkText('signencrypt-text', 'download-signencrypt-text', 'signed_and_encrypted_text.txt');
+                                            return false;"><button>Download encrypted message</button></a>
+                                        </div>
                                     </div>
                                 </div>
                              </div>
@@ -387,7 +374,7 @@ function doDL(s){
 
                         <!-- Decrypt message (and verify signature, if signed)-->
                         <div role="tabpanel" class="tab-pane" id="decrypt">
-							<h4><center>Only priv for simply decryption, priv+pub for decrypt & signature.</center></h4><br>
+                            <h4><center>Only priv for simply decryption, priv+pub for decrypt & signature.</center></h4><br>
                               <div class="row generator">
                                 <div class="col-md-5">
                                     <div class="panel panel-default">
@@ -397,7 +384,7 @@ function doDL(s){
                                         <div class="panel-body">
                                             <textarea class="form-control message" id="decryption-private-key" rows="7" placeholder="Paste private key here to do decryption by this. RSA key only."></textarea>
                                             <input type='file' onchange='openFile(event, "decription-private-key")'><br>
-											<br>
+                                            <br>
 
                                             <div class="input-group">
                                                 <div class="input-group-addon"><span class="glyphicon glyphicon-text-background" aria-hidden="true"></span></div>
@@ -405,16 +392,16 @@ function doDL(s){
                                             </div>
                                         </div>
                                     </div>
-									<div class="panel panel-default">
+                                    <div class="panel panel-default">
                                       <div class="panel-heading">
                                           <h3 class="panel-title">Signer's Public Key</h3>
                                       </div>
                                       <div class="panel-body">
                                           <textarea class="form-control message" id="signer_public_key" rows="7" placeholder="Paste the signer's public key here, if message have signature. This can be ECC key." title="Or leave this field empty, if message is without signature."></textarea>
                                           <input type='file' onchange='openFile(event, "signer_public_key")'><br>
-										  <br>
+                                          <br>
                                       </div>
-									  </div>
+                                      </div>
                                 </div>
 
                                  <div class="col-md-7">
@@ -432,7 +419,7 @@ But will be better to use 'virify'-tab to check signature."></textarea>
                                     </div>
 
 <!--Here you can see the multistring commentary-->
-									<button class="btn btn-warning" id="decryption-button" title="If private key not specified, or if message don't have signature,
+                                    <button class="btn btn-warning" id="decryption-button" title="If private key not specified, or if message don't have signature,
 this will not be verified successfully.">Decrypt the message (and verify signature)</button>
 
                                      <br>
@@ -443,10 +430,13 @@ this will not be verified successfully.">Decrypt the message (and verify signatu
                                             <h3 class="panel-title">Decrypted message</h3>
                                         </div>
                                         <div class="panel-body">
-											<div id="vrAlert2"></div>
+                                            <div id="vrAlert2"></div>
                                             <textarea class="form-control message" rows="7" id="decryption-decrypted-text" placeholder="Here you'll see the decrypted message." readonly="readonly"></textarea>
-											<input value='download' type='button' onclick='doDL(document.getElementById("decryption-decrypted-text").value)' />
-											</div>
+                                            <br>
+                                            <a id="download-decrypted-text" style="display:none;" href="javascript:void(0);" title="Download pure text"
+                                            onclick="linkText('decryption-decrypted-text', 'download-decrypted-text', 'decrypted_text.txt');
+                                            return false;"><button>Download decrypted text.</button></a>
+                                        </div>
                                     </div>
                                 </div>
                              </div>
@@ -607,11 +597,11 @@ your device.
                             <ul>
                                 <li>Original: <a href="https://github.com/heiswayi/pgp">Heiswayi</a></li>
                                 <li>Fork: <a href="https://github.com/ramuta/pgp">Ramuta</a></li>
-				<li>Fork: <a href="https://github.com/TheChiefMeat/pgp">TheChiefMeat</a></li>
+                <li>Fork: <a href="https://github.com/TheChiefMeat/pgp">TheChiefMeat</a></li>
                             </ul>
-							
-							<p>
-							You can find an offline version <a href="https://github.com/TheChiefMeat/pgp/releases/latest">here, maintained by TheChiefMeat.</a></p>
+                            
+                            <p>
+                            You can find an offline version <a href="https://github.com/TheChiefMeat/pgp/releases/latest">here, maintained by TheChiefMeat.</a></p>
                             <p>
                                 If you have any inquiry or problem, you may create an issue
                                 <a href="https://github.com/heiswayi/pgp/issues">here (heiswayi)</a> or
