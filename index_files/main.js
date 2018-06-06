@@ -1,3 +1,38 @@
+	//Load the keys to textareas from the text files, containing PGP keys as text.
+var openFile = function(event, id) {
+	var input = event.target;
+		var reader = new FileReader();
+		reader.onload = function(){
+			var text = reader.result;
+			var node = document.getElementById(id);
+			node.value = text;
+			//console.log(reader.result.substring(0, 200));
+		};
+		reader.readAsText(input.files[0]);
+};
+	  
+	//funtion to show and hide download link (button) for empty or filled readonly textarea's
+function linkText(input, link, fileName) { //IDs and filename
+  link.style.display = 'none' ? 'block': 'block';
+  updateLink(input, link)
+  link.download = fileName;
+  
+  function onInput() {
+    updateLink(input, link);
+  }
+  
+  input.addEventListener("input", onInput);
+  return onInput;
+}
+
+//function to generate download links for buttons.
+function updateLink(input, link) { //
+  link.hidden = !input.value;
+  link.href = "data:text/plain;charset=UTF-8," + encodeURI(input.value); //<-- data in href
+  link.onclick = '';
+  link.style.display = (input.value==='') ? 'none' : 'block';
+}
+
 $(document).ready(function() {
     /* Dynamic key size menus */
     $('#algorithm').change(function() {
