@@ -1,130 +1,36 @@
 	//Load the keys to textareas from the text files, containing PGP keys as text.
-var filename, as_base64, as_binary;
-var openFile = function(event, id, as_base64) {
+var openFile = function(event, id) {
 	var input = event.target;
 		var reader = new FileReader();
 		reader.onload = function(){
 			var text = reader.result;
-			if(text.indexOf(String.fromCharCode(65533))!==-1){
-				as_base64='as_base64';
-				openFile(event, id, as_base64);
-				document.getElementById(id).setAttribute('readonly', true);
-				document.getElementById(id).setAttribute('title',
-					'Unsigned character was been found in the source code.\n'+
-					'Now this content was been uploaded as base64.\n'+
-					'You can decode original source of this - from base64.\n\n'+
-					'Double-click here to discard readonly attribute.'
-				);
-			}
 			var node = document.getElementById(id);
-			if(as_base64==='as_base64'){
-				node.value = text.split(';base64,')[1];
-			}
-			else{
-				node.value = text;
-			}//console.log(reader.result.substring(0, 200));
+			node.value = text;
+			//console.log(reader.result.substring(0, 200));
 		};
-		
-		if(input.files[0]===undefined){
-			document.getElementById('filename_temp').innerHTML = '';
-		}
-		else{
-			//set file name as temporary text in invisible div
-			document.getElementById('filename_temp').innerHTML = input.files[0].name;
-		}
-		
-		if(as_base64==='as_base64'){
-			reader.readAsDataURL(input.files[0]);
-			document.getElementById("filename_temp").innerHTML +='.base64'
-		}else{
-			reader.readAsText(input.files[0]);
-		}
+		reader.readAsText(input.files[0]);
 };
-
-function isBase64(str) {
-    try {
-        return btoa(atob(str)) == str;
-    } catch (err) {
-        return false;
-    }
-}
-
-function set_file_name(link, action, as_binary){
-		
-}
 	  
 //funtion to show and hide download link (button) for empty or filled readonly textarea's
-function linkText(input, link, action, as_binary) { //IDs and filename
+function linkText(input, link, fileName) { //IDs and filename
   link.style.display = 'none' ? 'block': 'block';
-  updateLink(input, link);
-
-	var filename = document.getElementById("filename_temp");
-	if(filename===null){console.log('no element with ID '+filename_temp);}
-	else{
-		filename_temp = filename.innerHTML;
-	}
-	if(link===null){console.log('no element with ID '+link);}
-	
-	if(as_binary===undefined){
-		if(isBase64(input.value)){
-			if(filename_temp.indexOf('.base64')==-1){
-				filename_temp = filename_temp+'.base64';
-			}
-		}
-	}
-	else{
-		if(isBase64(input.value) && filename_temp.indexOf('.base64')!=-1){
-			filename_temp = filename_temp.replace('.base64','');
-		}
-	}
-
-  function onInput(as_binary, action) {
-    updateLink(input, link, as_binary, action);
+  updateLink(input, link)
+  link.download = fileName;
+  
+  function onInput() {
+    updateLink(input, link);
   }
   
-  input.addEventListener("input", onInput(as_binary, action));
+  input.addEventListener("input", onInput);
   return onInput;
 }
 
 //function to generate download links for buttons.
-function updateLink(input, link, as_binary, action) { //
+function updateLink(input, link) { //
   link.hidden = !input.value;
-	if(as_binary==='as_binary'){
-		link.href = "data:application/octet-stream;base64," + encodeURI(input.value); //<-- base64 as binary
-	}
-	else{
-		link.href = "data:text/plain;charset=UTF-8," + encodeURI(input.value); //<-- data in href
-	}
+  link.href = "data:text/plain;charset=UTF-8," + encodeURI(input.value); //<-- data in href
   link.onclick = '';
   link.style.display = (input.value==='') ? 'none' : 'block';
-  
-	if(action==='sign'){
-		var suffix = 'signed';
-		link.download = (filename_temp==='') ? "text"+'.'+suffix+'.txt' : filename_temp+'.'+suffix+'.txt';
-	}else if(action==='verify'){
-		var suffix = 'verified'
-		link.download = (filename_temp.indexOf('.signed.txt')!==1) ? filename_temp.replace('.signed.txt',''): "pure_text"+'.txt';
-	}else if(action==='encrypt'){
-		var suffix = 'encryted';
-		link.download = (filename_temp==='') ? "text"+'.encrypted.txt' : filename_temp+'.encrypted.txt';
-	}else if(action==='decrypt'){
-		var suffix = 'decrypted';
-		link.download = (filename_temp.indexOf('.encrypted.txt')!==1) ? filename_temp.replace('.encrypted.txt',''):"pure_text"+'.txt';
-	}else if(action==='sign+encrypt'){
-		var suffix = 'signed and encrypted';
-		link.download = (filename_temp==='') ? "text"+'.encrypted_and_signed.txt' : filename_temp+'.encrypted_and_signed.txt';
-	}else if(action==='decrypt+verify'){
-		var suffix = 'decrypted and verified';
-		link.download = (filename_temp.indexOf('.encrypted_and_signed.txt')!==1) ? filename_temp.replace('.encrypted_and_signed.txt','') : "pure_text"+'.txt';
-	}
-	
-	if(as_binary===undefined){
-		link.setAttribute('title', 'Download '+suffix+' message as text');
-	}else{
-		link.setAttribute('title', 'Download '+suffix+' message as binary.\n'+
-		'If in textarea base64 encoded file content - you can download this as binary RAW-data.'
-		);
-	}
 }
 
 
@@ -150,31 +56,6 @@ $(document).ready(function() {
     });
 
     $('[data-toggle="popover"]').popover({placement: 'top'});
-	
-	//discard readonly attribute by double-click on textarea
-	//readonly attribute using for protect base64 encoded binary data from any changes.
-	$( "#sign-plain-text" ).dblclick(function() {
-		$(this).removeAttr("title");
-		$(this).removeAttr("readonly");
-	});
-	
-	$( "#Unverified-plain-text" ).dblclick(function() {
-		$(this).removeAttr("title");
-		$(this).removeAttr("readonly");
-	});
-	
-	$( "#signencrypt-plain-text" ).dblclick(function() {
-		$(this).removeAttr("title");
-		$(this).removeAttr("readonly");
-	});
-	
-	$( "#decryption-encrypted-text" ).dblclick(function() {
-		$(this).removeAttr("title");
-		$(this).removeAttr("readonly");
-	});
-	
-	
-	
 
     // SIGN
     var signButton = $("#sign-button");
@@ -184,10 +65,7 @@ $(document).ready(function() {
         var SignedText = $("#signed-text");
         var signPrivateKey = $("#sign-private-key");
         var signPassphrase = $("#sign-passphrase");
-		
-		$('#vrAlert_signed').empty();
-		var clone = $('#vrError').clone();
-		
+
         var currUser = kbpgp.KeyManager.import_from_armored_pgp({
           armored: signPrivateKey.val()
         }, function(err, currUser) {
@@ -207,22 +85,12 @@ $(document).ready(function() {
                   kbpgp.box(params, function(err, result_string, result_buffer) {
                     console.log(err, result_string, result_buffer);
                     SignedText.val(result_string);
-					linkText(document.getElementById('signed-text'), document.getElementById('download-signed-text'), 'sign');
+					linkText(document.getElementById('signed-text'), document.getElementById('download-signed-text'), 'signed_message.txt');
                   });
-					
-					clone = $('#vrSuccess').clone();
-					clone.find('#vrAddrLabel').html("Message successfully signed.");
-					clone.appendTo($('#vrAlert_signed'));
-                }else{
-					console.log("Error"+err);
-					clone.find('#vrAddrLabel').html(err);
-					clone.appendTo($('#vrAlert_signed'));
-				}
+                }
               });
             } else {
               console.log("Loaded private key w/o passphrase");
-			  clone.find('#vrAddrLabel').html("Invalid private key or password.");
-			  clone.appendTo($('#vrAlert_signed'));
             }
           }
         });
@@ -266,9 +134,8 @@ $(document).ready(function() {
                       console.log("decrypted message: " + text);
 
                       PureText.val(text);
-					  linkText(document.getElementById('pure-text'), document.getElementById('download-pure-text'), 'verify');
-					  linkText(document.getElementById('pure-text'), document.getElementById('download_verified_as_binary'), 'verify', 'as_binary');
-
+					  linkText(document.getElementById('pure-text'), document.getElementById('download-pure-text'), 'pure_text.txt');
+					  
                       var ds = km = null;
                       ds = literals[0].get_data_signer();
                       if (ds) { km = ds.get_key_manager(); }
@@ -345,12 +212,11 @@ $(document).ready(function() {
                   kbpgp.box(params, function(err, result_string, result_buffer) {
                       console.log(err, result_string, result_buffer);
                       signencryptText.val(result_string);
-					    if(currUser===null){
-							linkText(document.getElementById('signencrypt-text'), document.getElementById('download-signencrypt-text'), 'encrypt');
+					  linkText(document.getElementById('signencrypt-text'), document.getElementById('download-signencrypt-text'), 'signed_and_encrypted_text.txt');
+						if(currUser===null){
 							clone = $('#vrWarning').clone();
 							clone.find('#vrAddrLabel').html("Message successfully encrypted, but not signed. Private key not loaded.");
 						}else{
-							linkText(document.getElementById('signencrypt-text'), document.getElementById('download-signencrypt-text'), 'sign+encrypt');
 							clone = $('#vrSuccess').clone();
 							clone.find('#vrAddrLabel').html("Message successfully encrypted and signed.");
 						}
@@ -406,7 +272,7 @@ $(document).ready(function() {
 							if (!err) {
 								console.log("Sender's public key is loaded");
 								ring.add_key_manager(senderPUB);
-								
+								console.log(ring);
 								kbpgp.unbox({keyfetch: ring, armored: decryptionEncryptedText.val()}, function(err, literals)
 								{
 									if (err != null) {
@@ -423,12 +289,7 @@ $(document).ready(function() {
 										linkText(
 											document.getElementById('decryption-decrypted-text'),
 											document.getElementById('download-decrypted-text'),
-											'decrypt+verify'
-										);
-										linkText(
-											document.getElementById('decryption-decrypted-text'),
-											document.getElementById('download_decrypt_verify_as_binary'),
-											'decrypt+verify', 'as_binary'
+											'decrypted_text.txt'
 										);
 										
 										var ds = km = null;
@@ -475,12 +336,7 @@ $(document).ready(function() {
 										linkText(
 											document.getElementById('decryption-decrypted-text'),
 											document.getElementById('download-decrypted-text'),
-											'decrypt'
-										);
-										linkText(
-											document.getElementById('decryption-decrypted-text'),
-											document.getElementById('download_decrypt_verify_as_binary'),
-											'decrypt', 'as_binary'
+											'decrypted_text.txt'
 										);
 										
 										var ds = km = null;
