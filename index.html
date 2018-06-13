@@ -34,7 +34,6 @@
 </style></head>
 
 <body>
-	<div id="filename_temp" style="display:none;" title="This is temp div for saving here a file name if file was been loaded by input."></div>
     <!--status notification-->
     <div class="hidden">
         <div class="alert alert-success fade in" id="vrSuccess">
@@ -47,6 +46,7 @@
             <button aria-hidden="true" class="close" data-dismiss="alert" type="button">&times;</button><span id="vrAddrLabel"></span>
         </div>
     </div>
+    
     <div class="container">
         <div class="row content">
             <div class="col-md-12">
@@ -55,11 +55,12 @@
                     <h1 class="title">PGP Suite</h1>
                     A simple and easy to use client-side PGP system
                 </div>
+
                 <div class="tabbable">
 
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#generator" aria-controls="generator" role="tab" data-toggle="tab">Generate PGP Keys</a></li>
+                        <li role="presentation" class="active"><a href="#generator" aria-controls="generator" role="tab" data-toggle="tab">Generate PGP Key</a></li>
                         <li role="presentation"><a href="#sign" aria-controls="sign" role="tab" data-toggle="tab">Sign</a></li>
                         <li role="presentation"><a href="#verify" aria-controls="verify" role="tab" data-toggle="tab">Verify</a></li>
                         <li role="presentation"><a href="#signencrypt" aria-controls="sign" role="tab" data-toggle="tab">(Sign+)Encrypt</a></li>
@@ -73,6 +74,7 @@
 
                     <!-- Tab panes -->
                     <div class="tab-content">
+
                         <!-- Key gen -->
                         <div role="tabpanel" class="tab-pane active" id="generator">
 
@@ -214,6 +216,7 @@
                                             <textarea class="form-control message" id="sign-private-key" rows="7" placeholder="Paste your private key here (ECC or RSA keys)." title="ECC and RSA algorithms working both for sign and verify. You can use ECC keys here."></textarea>
                                             <input type='file' onchange='openFile(event, "sign-private-key")'>
                                             <br>
+
                                             <div class="input-group">
                                                 <div class="input-group-addon"><span class="glyphicon glyphicon-text-background" aria-hidden="true"></span></div>
                                                 <input class="form-control" name="sign-passphrase" placeholder="Passphrase for private key" id="sign-passphrase" pattern=".{5,}" title="Enter your private key passphrase" type="password">
@@ -230,7 +233,7 @@
                                         </div>
                                         <div class="panel-body">
                                             <textarea class="form-control message" rows="7" id="sign-plain-text" placeholder="Write your message here."></textarea>
-                                            <input id="sign_src" type='file' onchange='openFile(event, "sign-plain-text")'><br>
+                                            <input type='file' onchange='openFile(event, "sign-plain-text")'><br>
                                         </div>
                                     </div>
 
@@ -241,13 +244,12 @@
                                         <div class="panel-heading">
                                             <h3 class="panel-title">Signed message</h3>
                                         </div>
-										<div id="vrAlert_signed"></div>
                                         <div class="panel-body">
                                         <textarea class="form-control message" rows="7" id="signed-text" placeholder="Here you'll see the signed message." readonly="readonly"></textarea>
                                         <br>
-                                        <a id="download-signed-text" style="display:none;" href="javascript:void(0);" title="Download signed text.">
-											<button>Download signed message</button>
-										</a>
+                                        <a id="download-signed-text" style="display:none;" href="javascript:void(0);" title="Download signed text."
+                                        onclick="linkText('signed-text', 'download-signed-text', 'signed_text.txt');
+                                        return false;"><button>Download signed message</button></a>
                                         </div>
                                     </div>
                                 </div>
@@ -293,13 +295,9 @@
                                         <div class="panel-body">
                                             <textarea class="form-control message" rows="7" id="pure-text" placeholder="Here you'll see the raw message, if signed it will be verified." readonly=""></textarea>
                                             <br>
-                                            <a id="download_verified_as_binary" style="display:none; float: right" href="javascript:void(0);"
-											title="If in textarea base64 encoded file content - you can download this as binary RAW-data.">
-												Download as binary
-											</a>
-											<a id="download-pure-text" style="display:none;" href="javascript:void(0);" title="Download pure text">
-												<button>Download pure message</button>
-											</a>
+                                            <a id="download-pure-text" style="display:none;" href="javascript:void(0);" title="Download pure text"
+                                            onclick="linkText('pure-text', 'download-pure-text', 'pure_text.txt');
+                                            return false;"><button>Download pure message</button></a>
                                         </div>
                                     </div>
                                 </div>
@@ -364,9 +362,9 @@
                                             <textarea class="form-control message" style="display: none;" rows="7" id="encrypted-text" placeholder="this is hidden textarea to copy from here an encrypted text" readonly="readonly"></textarea>
                                             <textarea class="form-control message" rows="7" id="signencrypt-text" placeholder="Here you'll see the signed and encrypted message." readonly="readonly"></textarea>
                                             <br>
-                                            <a id="download-signencrypt-text" style="display:none;"  href="javascript:void(0);" title="Download pure text">
-												<button>Download encrypted message</button>
-											</a>
+                                            <a id="download-signencrypt-text" style="display:none;"  href="javascript:void(0);" title="Download pure text"
+                                            onclick="linkText('signencrypt-text', 'download-signencrypt-text', 'signed_and_encrypted_text.txt');
+                                            return false;"><button>Download encrypted message</button></a>
                                         </div>
                                     </div>
                                 </div>
@@ -435,12 +433,9 @@ this will not be verified successfully.">Decrypt the message (and verify signatu
                                             <div id="vrAlert2"></div>
                                             <textarea class="form-control message" rows="7" id="decryption-decrypted-text" placeholder="Here you'll see the decrypted message." readonly="readonly"></textarea>
                                             <br>
-                                            <a id="download_decrypt_verify_as_binary" style="display:none; float: right" href="javascript:void(0);"
-											title="If in textarea base64 encoded file content - you can download this as binary RAW-data.">
-												Download as binary
-											</a>											<a id="download-decrypted-text" style="display:none;" href="javascript:void(0);" title="Download pure text">
-												<button>Download decrypted text.</button>
-											</a>
+                                            <a id="download-decrypted-text" style="display:none;" href="javascript:void(0);" title="Download pure text"
+                                            onclick="linkText('decryption-decrypted-text', 'download-decrypted-text', 'decrypted_text.txt');
+                                            return false;"><button>Download decrypted text.</button></a>
                                         </div>
                                     </div>
                                 </div>
@@ -590,11 +585,8 @@ your device.
                             </p>
 
                             <p>
-                                This project is a fork of Heiswayi Nrird's PGP Suite. Matej Ramuta forked it
-                                and added message encryption and decryption.<br>
-								TheChiefMeat added sign only mode, sign+encrypt mode as well as support for 8192 RSA keys.<br>
-								username1565 Added PGP key verification, file selection as well as program icons,
-								file uploading and downloading for textareas, notify message, and base64 encoding for files.
+                                This project is a fork of Heiswayi Nrird's PGP Key Generator. Matej Ramuta forked it
+                                and added message encryption and decryption. TheChiefMeat added sign only mode, sign+encrypt mode as well as support for 8192 RSA keys. username1565 Added PGP key verification, file selection as well as program icons.
                             </p>
 
                             <p>
